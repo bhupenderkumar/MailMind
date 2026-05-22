@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
 
@@ -41,6 +41,11 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const isAddingAccount = useRef(false);
 
+  // On web, explicitly set redirect URI to match what's registered in GCP
+  const webRedirectUri = Platform.OS === 'web' && typeof window !== 'undefined'
+    ? `${window.location.origin}${window.location.pathname}`.replace(/\/$/, '')
+    : undefined;
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: GOOGLE_EXPO_CLIENT_ID,
     androidClientId: GOOGLE_ANDROID_CLIENT_ID,
@@ -54,6 +59,7 @@ export default function App() {
       'https://www.googleapis.com/auth/gmail.modify',
     ],
     extraParams: { prompt: 'select_account' },
+    ...(webRedirectUri ? { redirectUri: webRedirectUri } : {}),
   });
 
   // Check for existing session on launch
