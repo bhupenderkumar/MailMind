@@ -34,6 +34,12 @@
     },
     "plugins": [
       "expo-web-browser"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "77f41785-9247-4d25-8220-4bb4cf3826b7"
+      }
+    },
+    "owner": "sharmakbhupender"
   }
 }
