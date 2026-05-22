@@ -82,7 +82,7 @@ class GmailEmailProvider implements EmailProvider {
 
     const listRes = await fetch(`${GMAIL_API}/messages?${params}`, { headers });
     if (!listRes.ok) throw new Error(`Gmail list error ${listRes.status}`);
-    const listData = await listRes.json();
+    const listData: any = await listRes.json();
 
     if (!listData.messages?.length) return { emails: [] };
 
@@ -90,7 +90,7 @@ class GmailEmailProvider implements EmailProvider {
       await Promise.all(
         listData.messages.map((m: { id: string }) => this.fetchDetail(m.id, headers))
       )
-    ).filter((e): e is EmailMessage => e !== null);
+    ).filter((e: any): e is EmailMessage => e !== null);
 
     return { emails, nextPageToken: listData.nextPageToken };
   }
@@ -243,7 +243,7 @@ class OutlookEmailProvider implements EmailProvider {
       headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
     });
     if (!res.ok) throw new Error(`Outlook error ${res.status}`);
-    const data = await res.json();
+    const data: any = await res.json();
 
     const emails: EmailMessage[] = (data.value || []).map((msg: any) => ({
       id: msg.id,
@@ -264,7 +264,7 @@ class OutlookEmailProvider implements EmailProvider {
       threadId: msg.conversationId,
     }));
 
-    return { emails, nextPageToken: data['@odata.nextLink'] };
+    return { emails, nextPageToken: (data as any)['@odata.nextLink'] };
   }
 
   async sendReply(

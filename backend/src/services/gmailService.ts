@@ -42,7 +42,7 @@ export async function fetchEmails(
     throw new Error(`Gmail list error ${listResponse.status}: ${JSON.stringify(err)}`);
   }
 
-  const listData = await listResponse.json();
+  const listData: any = await listResponse.json();
   if (!listData.messages || listData.messages.length === 0) {
     return { emails: [] };
   }
@@ -50,7 +50,7 @@ export async function fetchEmails(
   const emailPromises = listData.messages.map((msg: { id: string }) =>
     fetchEmailDetail(msg.id, headers)
   );
-  const emails = (await Promise.all(emailPromises)).filter((e): e is EmailData => e !== null);
+  const emails = (await Promise.all(emailPromises)).filter((e: any): e is EmailData => e !== null);
 
   return { emails, nextPageToken: listData.nextPageToken };
 }
