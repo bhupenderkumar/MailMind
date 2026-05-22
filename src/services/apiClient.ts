@@ -1,8 +1,10 @@
 import { Platform } from 'react-native';
 
-// Backend URL — use localhost for dev, replace with production URL for release
-const DEV_BACKEND = Platform.OS === 'web' ? 'http://localhost:3001' : 'http://10.0.2.2:3001'; // Android emulator uses 10.0.2.2
-const PROD_BACKEND = 'https://mailmind-api.your-domain.com'; // TODO: update for production
+// Backend URL configuration
+// Local dev: localhost:3001
+// Production: Render.com deployment
+const DEV_BACKEND = Platform.OS === 'web' ? 'http://localhost:3001' : 'http://10.0.2.2:3001';
+const PROD_BACKEND = 'https://mailmind-backend.onrender.com';
 
 export const BACKEND_URL = __DEV__ ? DEV_BACKEND : PROD_BACKEND;
 
