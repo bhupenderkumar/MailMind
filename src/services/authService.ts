@@ -2,6 +2,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -35,6 +36,13 @@ export interface UserInfo {
 }
 
 export const useGoogleAuth = () => {
+  // On web, use origin+pathname so the redirect URI matches what's registered in GCP
+  const redirectUri = Platform.OS === 'web'
+    ? (typeof window !== 'undefined'
+        ? `${window.location.origin}${window.location.pathname}`.replace(/\/$/, '')
+        : undefined)
+    : undefined;
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: GOOGLE_CONFIG.expoClientId,
     androidClientId: GOOGLE_CONFIG.androidClientId,
@@ -42,6 +50,7 @@ export const useGoogleAuth = () => {
     scopes: GOOGLE_CONFIG.scopes,
     responseType: 'code',
     usePKCE: true,
+    ...(redirectUri ? { redirectUri } : {}),
   });
 
   return { request, response, promptAsync };
