@@ -41,9 +41,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const isAddingAccount = useRef(false);
 
-  // On web, explicitly set redirect URI to match what's registered in GCP
+  // On web, use origin+pathname WITH trailing slash (GitHub Pages 301-redirects to add it,
+  // so the popup URL will have the slash — must match for maybeCompleteAuthSession to work)
   const webRedirectUri = Platform.OS === 'web' && typeof window !== 'undefined'
-    ? `${window.location.origin}${window.location.pathname}`.replace(/\/$/, '')
+    ? `${window.location.origin}${window.location.pathname.replace(/\/?$/, '/')}`
     : undefined;
 
   const [request, response, promptAsync] = Google.useAuthRequest({

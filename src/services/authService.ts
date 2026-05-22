@@ -36,10 +36,10 @@ export interface UserInfo {
 }
 
 export const useGoogleAuth = () => {
-  // On web, use origin+pathname so the redirect URI matches what's registered in GCP
+  // On web, use origin+pathname WITH trailing slash (GitHub Pages 301-redirects to add it)
   const redirectUri = Platform.OS === 'web'
     ? (typeof window !== 'undefined'
-        ? `${window.location.origin}${window.location.pathname}`.replace(/\/$/, '')
+        ? `${window.location.origin}${window.location.pathname.replace(/\/?$/, '/')}`
         : undefined)
     : undefined;
 
